@@ -1,4 +1,4 @@
-const colors = require("../data/dmcColors");
+const dmcColors = require("../data/dmcColors");
 
 // query for hex code, mode, and count
 // find color that is within a certain number of points from the r g and b. From that list, find the closest hex code.
@@ -12,7 +12,7 @@ function generateScheme(req, res, next) {
         res.status(400).json({ message: 'Please provide the colorCode in your request.' });
     }
 
-    const colorProfile = colors.find(color => color.dmcColor == colorCode);
+    const colorProfile = dmcColors.find(color => color.dmcColor == colorCode);
 
     if (!colorProfile) {
         res.status(400).json({ message: 'Please provide a valid color code.' });
@@ -51,10 +51,50 @@ async function fetchResults(apiQuery) {
         referrerPolicy: "no-referrer"
     })
         .then(response => response.text())
-        .then(data => console.log(data))
+        .then(data => checkDmcColors(JSON.parse(data)))
         .catch(e => console.log(e.message));
-    return response;
 }
+
+function checkDmcColors(results) {
+    let foundColors = [];
+    let missingColors = [];
+
+    results.colors.forEach(color => {
+        let colorProfile = dmcColors.find(dmcColor => dmcColor.hexCode == color.hex.clean);
+        if (colorProfile) {
+            foundColors.push(colorProfile);
+        }
+        missingColors.push(color);
+    });
+
+    if (missingColors.length > 0) {
+        findSimilarColors(missingColors);
+    }
+}
+
+function findSimilarColors(missingColors) {
+    let similarColors = [];
+
+    missingColors.forEach(missingColor => {
+        let num = 30;
+        let foundColors;
+
+        while (!foundColors) {
+            foundColors = dmcColors.filter(dmc => {
+                return Math.abs(missingColor.rgb.r - dmc.r) <= num && Math.abs(missingColor.rgb.g - dmc.g) <= num && Math.abs(missingColor.rgb.b - dmc.b) <= num;
+            });
+
+            if (foundColors) {
+                similarColors.push(foundColors);
+            }
+            num += 20;
+        }
+        console.log(similarColors);
+    });
+
+
+}
+
 module.exports = {
     read: [generateScheme]
 }
