@@ -73,25 +73,22 @@ function checkDmcColors(results) {
 }
 
 function findSimilarColors(missingColors) {
-    let similarColors = [];
+    let closestMatch = {};
 
     missingColors.forEach(missingColor => {
-        let num = 30;
-        let foundColors;
+        let distance = 442;
+        for(let i = 0; i < dmcColors.length; i++) {
+            let d = Math.sqrt(Math.pow((missingColor.rgb.r - dmcColors[i].r), 2) + Math.pow((missingColor.rgb.g - dmcColors[i].g), 2) + Math.pow((missingColor.rgb.b - dmcColors[i].b), 2));
 
-        while (!foundColors) {
-            foundColors = dmcColors.filter(dmc => {
-                return Math.abs(missingColor.rgb.r - dmc.r) <= num && Math.abs(missingColor.rgb.g - dmc.g) <= num && Math.abs(missingColor.rgb.b - dmc.b) <= num;
-            });
-
-            if (foundColors) {
-                similarColors.push(foundColors);
+            if (d < distance) {
+                distance = d;
+                closestMatch[missingColor.hex.clean] = dmcColors[i];
             }
-            num += 20;
         }
-        console.log(similarColors);
-    });
 
+    })
+
+    console.log(closestMatch);
 
 }
 
