@@ -1,10 +1,11 @@
 const express = require("express");
 const app = express();
+const cors = require('cors');
 
 const colorsRouter = require("./colors/colors.router");
 
 app.use(express.json());
-
+app.use(cors());
 app.use("/colors", colorsRouter);
 
 

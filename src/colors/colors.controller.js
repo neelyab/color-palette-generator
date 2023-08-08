@@ -69,7 +69,6 @@ function checkDmcColors(results) {
     if (missingColors.length > 0) {
         let similarColors = findSimilarColors(missingColors);
         foundColors = new Set(foundColors.concat(similarColors));
-        console.log(foundColors);
 
         return Array.from(foundColors);
     }
