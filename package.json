@@ -1,12 +1,16 @@
 {
   "name": "color-palette-generator",
   "version": "1.0.0",
+  "engines": {
+    "node": "18.14.0"
+  },
   "description": "API that generates DMC color palettes",
   "private": true,
   "main": "src/server.js",
   "scripts": {
     "start": "node src/server.js",
-    "dev": "nodemon src/server.js"
+    "dev": "nodemon src/server.js",
+    "client": "npm start --prefix client"
   },
   "keywords": [],
   "author": "Amanda",
@@ -15,6 +19,7 @@
     "nodemon": "^2.0.4"
   },
   "dependencies": {
+    "cors": "^2.8.5",
     "express": "^4.17.1"
   }
 }

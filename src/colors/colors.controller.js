@@ -1,8 +1,5 @@
 const dmcColors = require("../data/dmcColors");
 
-// query for hex code, mode, and count
-// find color that is within a certain number of points from the r g and b. From that list, find the closest hex code.
-
 function generateScheme(req, res, next) {
     const colorCode = req.query.colorCode;
     const mode = req.query.mode;
@@ -18,20 +15,21 @@ function generateScheme(req, res, next) {
         res.status(400).json({ message: 'Please provide a valid color code.' });
     }
 
-    const apiResponse = colorApi(colorProfile.hexCode, mode, count);
-    res.status(200).json({ data: `The hex code is ${colorProfile.hexCode}` });
-};
+    let validModes = ['monochrome', 'monochrome-dark', 'monochrome-light', 'analogic', 'complement', 'analogic-complement', 'triad', 'quad'];
+    if (mode && !validModes.includes(mode.toLowerCase())) {
+        res.status(400).json({ message: 'Please provide a valid color mode.' });
 
-function colorApi(hexCode, mode, count) {
+    }
+
     const query = {
-        hexCode: hexCode,
+        hexCode: colorProfile.hexCode,
         mode: mode,
         count: count
     };
     const colorSchemeQuery = formQueryString(query);
 
-    fetchResults(colorSchemeQuery);
-}
+    return fetchResults(colorSchemeQuery, res);
+};
 
 function formQueryString(query) {
     let queryString = `?hex=${query.hexCode}`;
@@ -40,7 +38,7 @@ function formQueryString(query) {
     return queryString;
 }
 
-async function fetchResults(apiQuery) {
+async function fetchResults(apiQuery, res) {
     const response = await fetch(`https://www.thecolorapi.com/scheme${apiQuery}`, {
         method: "GET",
         mode: "cors",
@@ -52,7 +50,8 @@ async function fetchResults(apiQuery) {
     })
         .then(response => response.text())
         .then(data => checkDmcColors(JSON.parse(data)))
-        .catch(e => console.log(e.message));
+        .then(results => res.status(200).json({ results }))
+        .catch(e => res.status(400).json({ message: 'Something went wrong, please try again.' }));
 }
 
 function checkDmcColors(results) {
@@ -68,30 +67,37 @@ function checkDmcColors(results) {
     });
 
     if (missingColors.length > 0) {
-        findSimilarColors(missingColors);
+        let similarColors = findSimilarColors(missingColors);
+        foundColors = new Set(foundColors.concat(similarColors));
+
+        return Array.from(foundColors);
     }
+
+    return foundColors;
 }
 
 function findSimilarColors(missingColors) {
-    let similarColors = [];
+    let closestMatch = {};
+    let finalList = [];
 
     missingColors.forEach(missingColor => {
-        let num = 30;
-        let foundColors;
+        let distance = 442;
+        for (let i = 0; i < dmcColors.length; i++) {
+            let d = Math.sqrt(Math.pow((missingColor.rgb.r - dmcColors[i].r), 2) + Math.pow((missingColor.rgb.g - dmcColors[i].g), 2) + Math.pow((missingColor.rgb.b - dmcColors[i].b), 2));
 
-        while (!foundColors) {
-            foundColors = dmcColors.filter(dmc => {
-                return Math.abs(missingColor.rgb.r - dmc.r) <= num && Math.abs(missingColor.rgb.g - dmc.g) <= num && Math.abs(missingColor.rgb.b - dmc.b) <= num;
-            });
-
-            if (foundColors) {
-                similarColors.push(foundColors);
+            if (d < distance && !Object.values(closestMatch).includes(dmcColors[i])) {
+                distance = d;
+                closestMatch[missingColor.hex.clean] = dmcColors[i];
             }
-            num += 20;
         }
-        console.log(similarColors);
-    });
 
+    })
+
+    for (let i = 0; i < missingColors.length; i++) {
+        finalList.push(closestMatch[missingColors[i].hex.clean]);
+    }
+
+    return finalList;
 
 }
 
