@@ -2,11 +2,13 @@ const express = require("express");
 const app = express();
 const cors = require('cors');
 
-const colorsRouter = require("./colors/colors.router");
+const colorPaletteRouter = require("./colorPalette/colorPalette.router");
+const threadColorRouter = require("./threadColors/threadColors.router");
 
 app.use(express.json());
 app.use(cors());
-app.use("/colors", colorsRouter);
+app.use("/color-palette", colorPaletteRouter);
+app.use("/thread-colors", threadColorRouter);
 
 
 // Not found handler
