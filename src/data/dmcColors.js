@@ -3326,7 +3326,7 @@ module.exports = [
         "hexCode": "4b3c2a"
     },
     {
-        "dmcColor": null,
+        "dmcColor": "Snow White",
         "dmcName": "Snow White",
         "r": 255,
         "g": 255,
@@ -3334,7 +3334,7 @@ module.exports = [
         "hexCode": "ffffff"
     },
     {
-        "dmcColor": null,
+        "dmcColor": "White",
         "dmcName": "White",
         "r": 252,
         "g": 251,
@@ -3350,7 +3350,7 @@ module.exports = [
         "hexCode": "f9f7f1"
     },
     {
-        "dmcColor": null,
+        "dmcColor": "Ecru",
         "dmcName": "Ecru",
         "r": 240,
         "g": 234,
