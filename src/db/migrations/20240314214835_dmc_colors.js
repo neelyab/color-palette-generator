@@ -4,11 +4,13 @@
  */
 exports.up = function (knex) {
     return knex.schema.createTable("dmc_colors", (table) => {
-        table.increments("color_id").primary(); // Sets palette_id as the primary key
+        table.increments("color_id").primary(); // Sets color_id as the primary key
         table.string("color_name");
         table.string("color_code");
         table.string("hex_code");
-        table.string("rgb");
+        table.string("r");
+        table.string("g");
+        table.string("b");
       });
   };
 /**
