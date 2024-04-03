@@ -14,7 +14,7 @@ app.use(cors());
 
 app.use("/oauth", authRouter);
 app.use("/request", requestRouter);
-app.use('/api/users', usersRouter);
+app.use("/users", usersRouter);
 app.use("/color-palette", colorPaletteRouter);
 app.use("/thread-colors", threadColorRouter);
 

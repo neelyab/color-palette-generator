@@ -5,7 +5,11 @@ async function getColors() {
   return data;
 }
 
-function generateScheme(req, res, next) {
+function formatString(str) {
+  return str.replaceAll(" ", "").toLowerCase();
+}
+
+async function generateScheme(req, res, next) {
   const colorCode = req.query.colorCode;
   const mode = req.query.mode;
   const count = req.query.count;
@@ -15,39 +19,43 @@ function generateScheme(req, res, next) {
       .status(400)
       .json({ message: "Please provide the colorCode in your request." });
   }
-  let colorProfile;
-  let dmcColors;
-  getColors().then((colors) => {
-    dmcColors = colors;
-    colorProfile = dmcColors.find((color) => color.color_code == colorCode);
 
-    if (!colorProfile) {
-      res.status(400).json({ message: "Please provide a valid color code." });
-    }
+  const code = formatString(colorCode);
+  const dmcColors = await getColors();
 
-    let validModes = [
-      "monochrome",
-      "monochrome-dark",
-      "monochrome-light",
-      "analogic",
-      "complement",
-      "analogic-complement",
-      "triad",
-      "quad",
-    ];
-    if (mode && !validModes.includes(mode.toLowerCase())) {
-      res.status(400).json({ message: "Please provide a valid color mode." });
-    }
-
-    const query = {
-      hexCode: colorProfile.hexCode,
-      mode: mode,
-      count: count,
-    };
-    const colorSchemeQuery = formQueryString(query);
-
-    return fetchResults(dmcColors, colorSchemeQuery, res);
+  const colorProfile = dmcColors.find((color) => {
+    color = formatString(color.color_code);
+    return color == code;
   });
+
+  if (!colorProfile || colorProfile.length < 1) {
+    return res
+      .status(400)
+      .json({ message: "Please provide a valid color code." });
+  }
+
+  let validModes = [
+    "monochrome",
+    "monochrome-dark",
+    "monochrome-light",
+    "analogic",
+    "complement",
+    "analogic-complement",
+    "triad",
+    "quad",
+  ];
+  if (mode && !validModes.includes(mode.toLowerCase())) {
+    res.status(400).json({ message: "Please provide a valid color mode." });
+  }
+
+  const query = {
+    hexCode: colorProfile.hexCode,
+    mode: mode,
+    count: count,
+  };
+  const colorSchemeQuery = formQueryString(query);
+
+  return fetchResults(dmcColors, colorSchemeQuery, res);
 }
 
 function formQueryString(query) {

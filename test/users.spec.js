@@ -36,7 +36,7 @@ describe("Embroidery User endpoints", () => {
         it(`POST /users returns 400 status when missing ${field} in request body`, () => {
           delete registerAttempt[field];
           return supertest(app)
-            .post("/api/users/")
+            .post("/users/")
             .send(registerAttempt)
             .expect(400);
         });
@@ -69,7 +69,7 @@ describe("Embroidery User endpoints", () => {
         };
         it("/POST users/ with short password returns 400", () => {
           return supertest(app)
-            .post("/api/users/")
+            .post("/users/")
             .send(shortPassword)
             .expect(400, {
               error: "Password must be longer than 8 characters",
@@ -77,13 +77,13 @@ describe("Embroidery User endpoints", () => {
         });
         it("/POST /users returns 400 when password is too long", () => {
           return supertest(app)
-            .post("/api/users")
+            .post("/users")
             .send(longPassword)
             .expect(400, { error: "Password must be less than 72 characters" });
         });
         it("/POST users/ with space at beginner or end returns 400", () => {
           return supertest(app)
-            .post("/api/users")
+            .post("/users")
             .send(startSpacePassword)
             .expect(400, {
               error: "Password must not start or end with empty spaces",
@@ -91,7 +91,7 @@ describe("Embroidery User endpoints", () => {
         });
         it("/POST users/ with space at beginning or end returns 400", () => {
           return supertest(app)
-            .post("/api/users")
+            .post("/users")
             .send(endSpacePassword)
             .expect(400, {
               error: "Password must not start or end with empty spaces",
@@ -99,7 +99,7 @@ describe("Embroidery User endpoints", () => {
         });
         it("returns 404 password must contain...", () => {
           return supertest(app)
-            .post("/api/users/")
+            .post("/users/")
             .send(invalidRequirements)
             .expect(400, {
               error:
@@ -121,7 +121,7 @@ describe("Embroidery User endpoints", () => {
       };
       it("returns 400 username already taken", () => {
         return supertest(app)
-          .post("/api/users")
+          .post("/users")
           .send(duplicateUser)
           .expect(400, { error: "Username already taken" });
       });
@@ -137,7 +137,7 @@ describe("Embroidery User endpoints", () => {
           first_name: "amanda",
         };
         it("creates new user", () => {
-          return supertest(app).post("/api/users/").send(newUser).expect(201);
+          return supertest(app).post("/users/").send(newUser).expect(201);
         });
       }
     );
