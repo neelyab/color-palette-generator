@@ -4,6 +4,7 @@ const cors = require('cors');
 
 const authRouter = require('./auth/oauth');
 const requestRouter = require('./auth/request');
+const usersRouter = require('./users/users-router');
 const colorPaletteRouter = require("./colorPalette/colorPalette.router");
 const threadColorRouter = require("./threadColors/threadColors.router");
 const { auth } = require("google-auth-library");
@@ -13,6 +14,7 @@ app.use(cors());
 
 app.use("/oauth", authRouter);
 app.use("/request", requestRouter);
+app.use('/api/users', usersRouter);
 app.use("/color-palette", colorPaletteRouter);
 app.use("/thread-colors", threadColorRouter);
 
