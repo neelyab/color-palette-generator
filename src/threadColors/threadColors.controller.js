@@ -1,9 +1,25 @@
-const dmcColors = require("../data/dmcColors");
+const colorsService = require("./threadColors.service");
 
-function getAllColors(req, res) {
-    return res.status(200).json(dmcColors);
+function colorByDMCCode(req, res, next) {
+  colorsService
+    .getColorByDMCCode(req.params.id)
+    .then((color) => {
+      if (color.length > 0) {
+        return res.json({ color });
+      }
+      next({ status: 404, message: `Color cannot be found.` });
+    })
+    .catch(next);
+}
+
+function list(req, res, next) {
+  colorsService
+    .getAllColors()
+    .then((data) => res.json({ data }))
+    .catch(next);
 }
 
 module.exports = {
-    read: [getAllColors]
-}
+  read: [colorByDMCCode],
+  list,
+};
