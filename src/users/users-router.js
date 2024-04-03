@@ -36,7 +36,6 @@ usersRouter
                          username: username.toLowerCase(),
                          user_password: hashedPassword,
                          first_name,
-                         date_created: 'now()',
                        }
                 // insert user into database
                 return UsersService.insertUser(

@@ -51,7 +51,6 @@ const UsersService = {
       id: user.id,
       first_name: xss(user.first_name),
       username: xss(user.username),
-      date_created: new Date(user.date_created),
     }
   },
 }
