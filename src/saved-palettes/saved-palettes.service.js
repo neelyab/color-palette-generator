@@ -7,23 +7,19 @@ const SavedPalettesService = {
         .leftJoin('dmc_colors AS dc', 'pc.color_id', 'dc.color_id')
         .where('palettes.user_id', user_id)
     },
-    // saveStitch(db, savedStitch){
-    //     return db.into('palettes').insert(savedStitch)
+    // savePalette(db, palette){
+    //     return db.into('palettes').insert(palette)
     // },
-    // getPaletteById(db, user_id, id){
-    //     return db.select('*').from('palettes').where('user_id', user_id).andWhere('id', id).first()
+    // saveColor(db, color){
+    //     return db.into('palettes').insert(color)
     // },
-    // getStitchDetailsById(db, user_id, id){
-    //     return db.from('saved_stitches AS saved')
-    //     .select('saved.user_id')
-    //     .distinct('saved.id', 'stitch.stitch_name', 'stitch.stitch_description', 'stitch.image_url')
-    //     .where('saved.user_id', user_id)
-    //     .andWhere('stitch.id', id)
-    //     .innerJoin('embroidery_users AS user', 'saved.user_id', 'user.id')
-    //     .rightJoin('embroidery_stitches AS stitch', 'stitch.id', 'saved.id')
-    // },
-    // deleteStitch(db, user_id, stitch){
-    //      return db.select('*').from('saved_stitches').where('user_id', user_id).andWhere('id', stitch).del()
+    getPaletteById(db, user_id, id){
+        return db.select('palette_name', 'user_id', 'pc.palette_id', 'dc.color_id', 'color_name', 'color_code', 'r', 'g', 'b', 'hex_code')
+        .innerJoin('palette_colors AS pc', 'pc.palette_id', 'palettes.palette_id')
+        .leftJoin('dmc_colors AS dc', 'pc.color_id', 'dc.color_id').from('palettes').where('user_id', user_id).andWhere('pc.palette_id', id)
+    },
+    // deletePalette(db, user_id, palette){
+    //      return db.select('*').from('saved_palettes').where('user_id', user_id).andWhere('palette_id', palette).del()
     // }
 }
 
