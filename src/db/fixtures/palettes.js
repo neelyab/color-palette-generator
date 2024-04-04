@@ -9,10 +9,14 @@ module.exports = [
       },
       {
         palette_name: 'Green Palette',
-        user_id: 1
+        user_id: 3
       },
       {
         palette_name: 'Monochrome Palette',
-        user_id: 2
+        user_id: 3
+      },
+      {
+        palette_name: 'Beautiful Palette',
+        user_id: 3
       },
 ];

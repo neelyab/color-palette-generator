@@ -1,4 +1,3 @@
-// const dmcColors = require("../data/dmcColors");
 const knexInstance = require("../db/connection");
 
 function getAllColors() {
