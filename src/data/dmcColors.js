@@ -1,24 +1,3 @@
-// script for threadcolors.com
-
-// const table = document.getElementById("closest-colors");
-// console.log(table);
-// const dmcColors = [];
-//   Array.from(table.rows).forEach((row, i) => {
-//       let tableRow = {};
-//       const cells = Array.from(row.cells);
-//       if(i == 0){
-//           return;
-//       }
-//       tableRow.dmcColor = Number(cells[1].firstChild.data);
-//       tableRow.dmcName = cells[2].firstChild.firstChild.data;
-//       tableRow.r = Number(cells[3].firstChild.data);
-//       tableRow.g = Number(cells[4].firstChild.data);
-//       tableRow.b = Number(cells[5].firstChild.data);
-//       tableRow.hexCode = cells[6].firstChild.data;
-//       console.log(tableRow);
-//       dmcColors.push(tableRow);
-//     });
-// console.log(dmcColors);
 
 module.exports = [
     {

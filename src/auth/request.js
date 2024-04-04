@@ -22,8 +22,6 @@ router.post('/', async function(req, res, next){
         prompt: 'consent'
     });
 
-    console.log(authorizeUrl);
-
     res.json({url:authorizeUrl})
 })
 

@@ -4,7 +4,6 @@ const config = require("../config");
 
 const AuthService = {
     getUserWithUserName(db, username){
-        console.log('got here');
         return db('embroidery_users').where({username}).first()
     },
     comparePasswords(password, hash){

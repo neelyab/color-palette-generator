@@ -4,6 +4,7 @@ const SavedPalettesService = require("./saved-palettes.service");
 const ThreadColorsService = require("../threadColors/threadColors.service");
 const savedPalettesRouter = express.Router();
 const knexInstance = require("../db/connection");
+const xss = require("xss");
 
 savedPalettesRouter
   .route("/")
@@ -14,6 +15,36 @@ savedPalettesRouter
       let palettes = formatPalettes(p);
       return res.status(200).json(palettes);
     });
+  })
+  .post((req, res) => {
+    const user_id = req.user.id;
+    const paletteInfo = req.body;
+
+    if (
+      !paletteInfo ||
+      !paletteInfo.palette_name ||
+      !paletteInfo.colors ||
+      paletteInfo.colors.length < 1
+    ) {
+      return res.status(400).json("Missing name or colors.");
+    }
+    const savedPalette = {
+      palette_name: xss(paletteInfo.palette_name),
+      user_id: user_id,
+    };
+    SavedPalettesService.savePalette(knexInstance, savedPalette).then(
+      (palette) => {
+        let colorsToSave = paletteInfo.colors.map((color) => {
+          return {
+            color_id: xss(color),
+            palette_id: palette[0].palette_id,
+          };
+        });
+        SavedPalettesService.saveColors(knexInstance, colorsToSave).then(() => {
+          return res.status(201).send(`Palette saved.`);
+        });
+      }
+    );
   });
 
 savedPalettesRouter
@@ -25,35 +56,20 @@ savedPalettesRouter
 
     SavedPalettesService.getPaletteById(knexInstance, user_id, id).then((p) => {
       if (p.length < 1) {
-        return res.status(401).json("color not found");
+        return res.status(401).json("Palette not found.");
       }
 
       let palette = formatPalettes(p);
       return res.status(200).json(palette);
     });
+  })
+  .delete((req, res) => {
+    const user_id = req.user.id;
+    const id = req.params.id;
+    SavedPalettesService.deletePalette(knexInstance, user_id, id).then(() => {
+      return res.status(200).send(`Palette with id: ${id} deleted.`);
+    });
   });
-// .post((req, res) => {
-//     const user_id = req.user
-//     const {id} = req.params
-//     const savedStitch = {
-//         user_id,
-//         id
-//     }
-//     SavedStitchesService.saveStitch(req.app.get('db'), savedStitch)
-//     .then(() => {
-//         return res.status(201).send(`Stitch with id: ${id} saved`)
-//     })
-// })
-// .delete(checkStitchIsSaved, (req, res) => {
-//     // check if stitch is saved before deleting it
-//     const user_id = req.user
-//     const id = req.stitch.id
-//     SavedStitchesService.deleteStitch(req.app.get('db'), user_id, id)
-//     .then(()=>{
-//         return res.status(200).send(`Stitch with id: ${id} deleted`)
-//     })
-// })
-
 
 function formatPalettes(palettes) {
   if (!palettes) {
@@ -72,6 +88,7 @@ function formatPalettes(palettes) {
 
     let colorObj = {
       name: p.color_name,
+      colorId: p.color_id,
       colorCode: p.color_code,
       r: p.r,
       g: p.g,

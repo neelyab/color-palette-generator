@@ -11,16 +11,14 @@ function requireAuth(req, res, next) {
         bearerToken = authToken.slice(7, authToken.length);
     }
     try {
-        console.log('got hereee')
         // verify token and get user with username from database
         const payload = AuthService.verifyJwt(bearerToken);
-        console.log(`payload ${payload}`);
+
         AuthService.getUserWithUserName(
             knexInstance,
             payload.sub
         )
         .then(user =>{
-            console.log(user);
             // if user doesn't exist, send status 401
             if(!user)
             return res.status(401).json({error: 'Unauthorized request'})
