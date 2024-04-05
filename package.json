@@ -2,7 +2,7 @@
   "name": "color-palette-generator",
   "version": "1.0.0",
   "engines": {
-    "node": "18.14.0"
+    "node": ">=18.14.0"
   },
   "description": "API that generates DMC color palettes",
   "private": true,
@@ -26,6 +26,7 @@
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
+    "expect.js": "^0.3.1",
     "express": "^4.17.1",
     "google-auth-library": "^9.6.3",
     "jsonwebtoken": "^9.0.2",

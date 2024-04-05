@@ -1,5 +1,6 @@
 const bcrypt = require("bcryptjs");
-// const jwt = require('jsonwebtoken')
+const jwt = require('jsonwebtoken');
+const dmcColors = require('./dmcColors');
 
 function makeSavedPaletteColorsArray() {
   return [
@@ -98,6 +99,9 @@ function makeUsersArray() {
     },
   ];
 }
+function makeDMCColorsArray() {
+  return dmcColors;
+}
 function seedUsers(db, users) {
   const preppedUsers = users.map((user) => ({
     ...user,
@@ -118,13 +122,18 @@ function seedSavedPalettes(db, palettes) {
 function seedSavedPaletteColors(db, colors) {
   return db.into("palette_colors").insert(colors);
 }
+function seedDMCColors(db, colors) {
+  return db.into("dmc_colors").insert(dmcColors);
+}
 
 module.exports = {
   makeUsersArray,
   seedUsers,
   seedSavedPalettes,
   seedSavedPaletteColors,
+  seedDMCColors,
   makeAuthHeader,
   makeSavedPalettesArray,
   makeSavedPaletteColorsArray,
+  makeDMCColorsArray,
 };

@@ -131,7 +131,7 @@ describe("Embroidery User endpoints", () => {
       "POST /users posts new user into database and returns user information in json response",
       () => {
         const newUser = {
-          username: "amanda1",
+          username: "amanda1" + Math.random(),
           user_password: "Password!1",
           first_name: "amanda",
         };

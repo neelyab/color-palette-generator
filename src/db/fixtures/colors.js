@@ -1,4 +1,4 @@
-const colorList = require('../../data/dmcColors');
+const colorList = require('../../../test/dmcColors');
 
 const finalList = colorList.map((color)=> {
     let colorInfo = {};
