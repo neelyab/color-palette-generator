@@ -1,7 +1,6 @@
 const helpers = require("./test-helpers");
 const app = require("../src/app");
 const knex = require("knex");
-// import { expect } from 'chai';
 
 const usersArray = helpers.makeUsersArray();
 
@@ -16,12 +15,12 @@ describe("Embroidery User endpoints", () => {
   });
   before("clean tables", () => {
     return db.raw(
-      "TRUNCATE TABLE embroidery_users, palettes, dmc_colors RESTART IDENTITY CASCADE"
+      "TRUNCATE TABLE embroidery_users, palettes, palette_colors, dmc_colors RESTART IDENTITY CASCADE"
     );
   });
   afterEach("clean up tables", () => {
     return db.raw(
-      "TRUNCATE TABLE embroidery_users, palettes, dmc_colors RESTART IDENTITY CASCADE"
+      "TRUNCATE TABLE embroidery_users, palettes, palette_colors, dmc_colors RESTART IDENTITY CASCADE"
     );
   });
   describe("user registration field requirements", () => {
@@ -132,7 +131,7 @@ describe("Embroidery User endpoints", () => {
       "POST /users posts new user into database and returns user information in json response",
       () => {
         const newUser = {
-          username: "admin",
+          username: "amanda1",
           user_password: "Password!1",
           first_name: "amanda",
         };
