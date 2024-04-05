@@ -31,6 +31,7 @@
     "google-auth-library": "^9.6.3",
     "jsonwebtoken": "^9.0.2",
     "knex": "^3.1.0",
+    "node-vibrant": "^3.2.1-alpha.1",
     "pg": "^8.11.3",
     "xss": "^1.0.15"
   }
