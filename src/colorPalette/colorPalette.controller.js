@@ -15,7 +15,7 @@ async function generateScheme(req, res, next) {
   const count = req.query.count;
 
   if (!colorCode) {
-    res
+    return res
       .status(400)
       .json({ message: "Please provide the colorCode in your request." });
   }
@@ -45,11 +45,13 @@ async function generateScheme(req, res, next) {
     "quad",
   ];
   if (mode && !validModes.includes(mode.toLowerCase())) {
-    res.status(400).json({ message: "Please provide a valid color mode." });
+    return res
+      .status(400)
+      .json({ message: "Please provide a valid color mode." });
   }
 
   const query = {
-    hexCode: colorProfile.hexCode,
+    hexCode: colorProfile.hex_code,
     mode: mode,
     count: count,
   };
@@ -94,7 +96,8 @@ function checkDmcColors(results, dmcColors) {
 
   results.colors.forEach((color) => {
     let colorProfile = dmcColors.find(
-      (dmcColor) => dmcColor.hex_code == color.hex.clean
+      (dmcColor) =>
+        dmcColor.hex_code.toLowerCase() == color.hex.clean.toLowerCase()
     );
     if (colorProfile) {
       foundColors.push(colorProfile);
@@ -118,22 +121,23 @@ function findSimilarColors(missingColors, dmcColors) {
 
   missingColors.forEach((missingColor) => {
     let distance = 442;
+
     for (let i = 0; i < dmcColors.length; i++) {
       let d = Math.sqrt(
-        Math.pow(missingColor.rgb.r - dmcColors[i].r, 2) +
-          Math.pow(missingColor.rgb.g - dmcColors[i].g, 2) +
-          Math.pow(missingColor.rgb.b - dmcColors[i].b, 2)
+        Math.pow(missingColor.rgb.r - parseInt(dmcColors[i].r), 2) +
+          Math.pow(missingColor.rgb.g - parseInt(dmcColors[i].g), 2) +
+          Math.pow(missingColor.rgb.b - parseInt(dmcColors[i].b), 2)
       );
 
       if (d < distance && !Object.values(closestMatch).includes(dmcColors[i])) {
         distance = d;
-        closestMatch[missingColor.hex.clean] = dmcColors[i];
+        closestMatch[missingColor.hex.clean.toLowerCase()] = dmcColors[i];
       }
     }
   });
 
   for (let i = 0; i < missingColors.length; i++) {
-    finalList.push(closestMatch[missingColors[i].hex.clean]);
+    finalList.push(closestMatch[missingColors[i].hex.clean.toLowerCase()]);
   }
 
   return finalList;
