@@ -2,12 +2,13 @@
   "name": "color-palette-generator",
   "version": "1.0.0",
   "engines": {
-    "node": "18.14.0"
+    "node": ">=18.14.0"
   },
   "description": "API that generates DMC color palettes",
   "private": true,
   "main": "src/server.js",
   "scripts": {
+    "test": "mocha --require test/setup.js",
     "start": "node src/server.js",
     "dev": "nodemon src/server.js",
     "client": "npm start --prefix client"
@@ -16,12 +17,21 @@
   "author": "Amanda",
   "license": "ISC",
   "devDependencies": {
-    "nodemon": "^2.0.4"
+    "chai": "^5.1.0",
+    "mocha": "^10.4.0",
+    "nodemon": "^2.0.4",
+    "supertest": "^6.3.4"
   },
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
+    "expect.js": "^0.3.1",
     "express": "^4.17.1",
-    "google-auth-library": "^9.6.3"
+    "google-auth-library": "^9.6.3",
+    "jsonwebtoken": "^9.0.2",
+    "knex": "^3.1.0",
+    "pg": "^8.11.3",
+    "xss": "^1.0.15"
   }
 }
