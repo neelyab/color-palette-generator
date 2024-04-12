@@ -81,6 +81,7 @@ function formatPalettes(palettes) {
   palettes.forEach((p) => {
     if (!savedPalettes[p.palette_id]) {
       savedPalettes[p.palette_id] = {
+        id: p.palette_id,
         name: p.palette_name,
         colors: [],
       };
