@@ -7,11 +7,11 @@ const {oAuth2Client, OAuth2Client} = require("google-auth-library");
 async function getUserData(access_token) {
     const response = await fetch(`https://www.googleapis.com/oauth2/v3/userinfo?access_token=${access_token}`);
     const data = await response.json();
-    console.log('data', data);
+    return data;
 }
 router.get('/', async function(req, res, next){
     const code = req.query.code;
-    console.log(code);
+    let userInfo;
     try {
         const redirectUrl = 'http://127.0.0.1:5150/oauth';
         const oAuth2Client = new OAuth2Client(
@@ -21,15 +21,15 @@ router.get('/', async function(req, res, next){
         );
         const r = await oAuth2Client.getToken(code);
         await oAuth2Client.setCredentials(r.tokens);
-        console.log('tokens acquired');
+
         const user = oAuth2Client.credentials;
-        console.log('credentials', user);
-        await getUserData(user.access_token);
+        await getUserData(user.access_token).then((data) =>{
+            userInfo = {user, url: 'http://localhost:3000/' };
+        });
     } catch(err) {
-        console.log('error with signing in user');
     }
 
-    res.redirect(303, 'http://localhost:3000/');
+    res.status(200).json(userInfo);
 })
 
 module.exports = router;
